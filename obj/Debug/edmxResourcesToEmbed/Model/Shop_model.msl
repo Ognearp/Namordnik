@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="Хранилище up_shopModelContainer" CdmEntityContainer="up_shopEntities">
+    <EntitySetMapping Name="Materials_product">
+      <EntityTypeMapping TypeName="up_shopModel.Materials_product">
+        <MappingFragment StoreEntitySet="Materials_product">
+          <ScalarProperty Name="name_materials" ColumnName="name_materials" />
+          <ScalarProperty Name="tip_materials" ColumnName="tip_materials" />
+          <ScalarProperty Name="kol_vo_upakovke" ColumnName="kol_vo_upakovke" />
+          <ScalarProperty Name="edinicha_izm" ColumnName="edinicha_izm" />
+          <ScalarProperty Name="kol_vo_sklad" ColumnName="kol_vo_sklad" />
+          <ScalarProperty Name="Min_voz_ostatok" ColumnName="Min_voz_ostatok" />
+          <ScalarProperty Name="Cost" ColumnName="Cost" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="product_sale">
+      <EntityTypeMapping TypeName="up_shopModel.product_sale">
+        <MappingFragment StoreEntitySet="product_sale">
+          <ScalarProperty Name="name_product" ColumnName="name_product" />
+          <ScalarProperty Name="kol_vo_sale" ColumnName="kol_vo_sale" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="products_s_import">
+      <EntityTypeMapping TypeName="up_shopModel.products_s_import">
+        <MappingFragment StoreEntitySet="products_s_import">
+          <ScalarProperty Name="name_product" ColumnName="name_product" />
+          <ScalarProperty Name="articul" ColumnName="articul" />
+          <ScalarProperty Name="min_cost_for_agent" ColumnName="min_cost_for_agent" />
+          <ScalarProperty Name="image" ColumnName="image" />
+          <ScalarProperty Name="tip_product" ColumnName="tip_product" />
+          <ScalarProperty Name="kol_vo_for_proizv" ColumnName="kol_vo_for_proizv" />
+          <ScalarProperty Name="number_for_proizvodstvo" ColumnName="number_for_proizvodstvo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sysdiagrams">
+      <EntityTypeMapping TypeName="up_shopModel.sysdiagrams">
+        <MappingFragment StoreEntitySet="sysdiagrams">
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+          <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+          <ScalarProperty Name="version" ColumnName="version" />
+          <ScalarProperty Name="definition" ColumnName="definition" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="product">
+      <EntityTypeMapping TypeName="up_shopModel.product">
+        <MappingFragment StoreEntitySet="product">
+          <ScalarProperty Name="Product1" ColumnName="Product" />
+          <ScalarProperty Name="name_material" ColumnName="name_material" />
+          <ScalarProperty Name="neobxodimoe_kol_vo_materiala" ColumnName="neobxodimoe_kol_vo_materiala" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="up_shopModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Materials_product">
+    <Key>
+      <PropertyRef Name="name_materials" />
+    </Key>
+    <Property Name="name_materials" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="tip_materials" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="kol_vo_upakovke" Type="Double" />
+    <Property Name="edinicha_izm" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="kol_vo_sklad" Type="Double" />
+    <Property Name="Min_voz_ostatok" Type="Double" />
+    <Property Name="Cost" Type="Decimal" Precision="19" Scale="4" />
+    <NavigationProperty Name="product" Relationship="Self.FK_product_Materials_product" FromRole="Materials_product" ToRole="product" />
+  </EntityType>
+  <EntityType Name="product_sale">
+    <Key>
+      <PropertyRef Name="name_product" />
+    </Key>
+    <Property Name="name_product" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="kol_vo_sale" Type="Int32" />
+    <NavigationProperty Name="products_s_import" Relationship="Self.FK_product_sale_products_s_import" FromRole="product_sale" ToRole="products_s_import" />
+  </EntityType>
+  <EntityType Name="products_s_import">
+    <Key>
+      <PropertyRef Name="name_product" />
+    </Key>
+    <Property Name="name_product" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="articul" Type="Double" />
+    <Property Name="min_cost_for_agent" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="image" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="tip_product" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="kol_vo_for_proizv" Type="Double" />
+    <Property Name="number_for_proizvodstvo" Type="Double" />
+    <NavigationProperty Name="product_sale" Relationship="Self.FK_product_sale_products_s_import" FromRole="products_s_import" ToRole="product_sale" />
+    <NavigationProperty Name="product" Relationship="Self.FK_product_products_s_import" FromRole="products_s_import" ToRole="product" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="product">
+    <Key>
+      <PropertyRef Name="name_material" />
+    </Key>
+    <Property Name="Product1" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="name_material" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="neobxodimoe_kol_vo_materiala" Type="Double" />
+    <NavigationProperty Name="Materials_product" Relationship="Self.FK_product_Materials_product" FromRole="product" ToRole="Materials_product" />
+    <NavigationProperty Name="products_s_import" Relationship="Self.FK_product_products_s_import" FromRole="product" ToRole="products_s_import" />
+  </EntityType>
+  <Association Name="FK_product_Materials_product">
+    <End Role="Materials_product" Type="Self.Materials_product" Multiplicity="1" />
+    <End Role="product" Type="Self.product" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Materials_product">
+        <PropertyRef Name="name_materials" />
+      </Principal>
+      <Dependent Role="product">
+        <PropertyRef Name="name_material" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_product_sale_products_s_import">
+    <End Role="products_s_import" Type="Self.products_s_import" Multiplicity="1" />
+    <End Role="product_sale" Type="Self.product_sale" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="products_s_import">
+        <PropertyRef Name="name_product" />
+      </Principal>
+      <Dependent Role="product_sale">
+        <PropertyRef Name="name_product" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_product_products_s_import">
+    <End Role="products_s_import" Type="Self.products_s_import" Multiplicity="0..1" />
+    <End Role="product" Type="Self.product" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="products_s_import">
+        <PropertyRef Name="name_product" />
+      </Principal>
+      <Dependent Role="product">
+        <PropertyRef Name="Product1" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="up_shopEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Materials_product" EntityType="Self.Materials_product" />
+    <EntitySet Name="product_sale" EntityType="Self.product_sale" />
+    <EntitySet Name="products_s_import" EntityType="Self.products_s_import" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="product" EntityType="Self.product" />
+    <AssociationSet Name="FK_product_Materials_product" Association="Self.FK_product_Materials_product">
+      <End Role="Materials_product" EntitySet="Materials_product" />
+      <End Role="product" EntitySet="product" />
+    </AssociationSet>
+    <AssociationSet Name="FK_product_sale_products_s_import" Association="Self.FK_product_sale_products_s_import">
+      <End Role="products_s_import" EntitySet="products_s_import" />
+      <End Role="product_sale" EntitySet="product_sale" />
+    </AssociationSet>
+    <AssociationSet Name="FK_product_products_s_import" Association="Self.FK_product_products_s_import">
+      <End Role="products_s_import" EntitySet="products_s_import" />
+      <End Role="product" EntitySet="product" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

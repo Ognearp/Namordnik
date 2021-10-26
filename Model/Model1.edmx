@@ -1,0 +1,327 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище up_shopModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Materials">
+          <Key>
+            <PropertyRef Name="name_materials" />
+          </Key>
+          <Property Name="name_materials" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="tip_materials" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="kol_vo_upakovke" Type="float" Nullable="false" />
+          <Property Name="edinicha_izm" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="kol_vo_sklad" Type="float" Nullable="false" />
+          <Property Name="Min_voz_ostatok" Type="float" Nullable="false" />
+          <Property Name="Cost" Type="money" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "up_shop.dbo.MaterialsProduct" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="MaterialsProduct">
+          <Key>
+            <PropertyRef Name="Product" />
+            <PropertyRef Name="name_material" />
+          </Key>
+          <Property Name="Product" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="name_material" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="neobxodimoe_kol_vo_materiala" Type="float" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="name_product" />
+          </Key>
+          <Property Name="name_product" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="articul" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="min_cost" Type="float" Nullable="false" />
+          <Property Name="images" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="tip_product" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="kol_for_proizv" Type="int" Nullable="false" />
+          <Property Name="number_proizv" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "up_shop.dbo.product_sale" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="product_sale">
+          <Key>
+            <PropertyRef Name="name_product" />
+          </Key>
+          <Property Name="name_product" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="kol_vo_sale" Type="int" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK_MaterialsProduct_Materials">
+          <End Role="Materials" Type="Self.Materials" Multiplicity="1" />
+          <End Role="MaterialsProduct" Type="Self.MaterialsProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Materials">
+              <PropertyRef Name="name_materials" />
+            </Principal>
+            <Dependent Role="MaterialsProduct">
+              <PropertyRef Name="name_material" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MaterialsProduct_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="MaterialsProduct" Type="Self.MaterialsProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="name_product" />
+            </Principal>
+            <Dependent Role="MaterialsProduct">
+              <PropertyRef Name="Product" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_product_sale_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="product_sale" Type="Self.product_sale" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="name_product" />
+            </Principal>
+            <Dependent Role="product_sale">
+              <PropertyRef Name="name_product" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище up_shopModelContainer">
+          <EntitySet Name="Materials" EntityType="Self.Materials" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MaterialsProduct" EntityType="Self.MaterialsProduct" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [MaterialsProduct].[Product] AS [Product], 
+    [MaterialsProduct].[name_material] AS [name_material], 
+    [MaterialsProduct].[neobxodimoe_kol_vo_materiala] AS [neobxodimoe_kol_vo_materiala]
+    FROM [dbo].[MaterialsProduct] AS [MaterialsProduct]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="product_sale" EntityType="Self.product_sale" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [product_sale].[name_product] AS [name_product], 
+    [product_sale].[kol_vo_sale] AS [kol_vo_sale]
+    FROM [dbo].[product_sale] AS [product_sale]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_MaterialsProduct_Materials" Association="Self.FK_MaterialsProduct_Materials">
+            <End Role="Materials" EntitySet="Materials" />
+            <End Role="MaterialsProduct" EntitySet="MaterialsProduct" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MaterialsProduct_Product" Association="Self.FK_MaterialsProduct_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="MaterialsProduct" EntitySet="MaterialsProduct" />
+          </AssociationSet>
+          <AssociationSet Name="FK_product_sale_Product" Association="Self.FK_product_sale_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="product_sale" EntitySet="product_sale" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="up_shopModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Materials">
+          <Key>
+            <PropertyRef Name="name_materials" />
+          </Key>
+          <Property Name="name_materials" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tip_materials" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="kol_vo_upakovke" Type="Double" Nullable="false" />
+          <Property Name="edinicha_izm" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="kol_vo_sklad" Type="Double" Nullable="false" />
+          <Property Name="Min_voz_ostatok" Type="Double" Nullable="false" />
+          <Property Name="Cost" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <NavigationProperty Name="MaterialsProduct" Relationship="Self.FK_MaterialsProduct_Materials" FromRole="Materials" ToRole="MaterialsProduct" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="name_product" />
+          </Key>
+          <Property Name="name_product" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="articul" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="min_cost" Type="Double" Nullable="false" />
+          <Property Name="images" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tip_product" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="kol_for_proizv" Type="Int32" Nullable="false" />
+          <Property Name="number_proizv" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="MaterialsProduct" Relationship="Self.FK_MaterialsProduct_Product" FromRole="Product" ToRole="MaterialsProduct" />
+          <NavigationProperty Name="product_sale" Relationship="Self.FK_product_sale_Product" FromRole="Product" ToRole="product_sale" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="MaterialsProduct">
+          <Key>
+            <PropertyRef Name="Product" />
+            <PropertyRef Name="name_material" />
+          </Key>
+          <Property Name="Product" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="name_material" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="neobxodimoe_kol_vo_materiala" Type="Double" />
+          <NavigationProperty Name="Materials" Relationship="Self.FK_MaterialsProduct_Materials" FromRole="MaterialsProduct" ToRole="Materials" />
+          <NavigationProperty Name="Product1" Relationship="Self.FK_MaterialsProduct_Product" FromRole="MaterialsProduct" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="product_sale">
+          <Key>
+            <PropertyRef Name="name_product" />
+          </Key>
+          <Property Name="name_product" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="kol_vo_sale" Type="Int32" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_product_sale_Product" FromRole="product_sale" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK_MaterialsProduct_Materials">
+          <End Role="Materials" Type="Self.Materials" Multiplicity="1" />
+          <End Role="MaterialsProduct" Type="Self.MaterialsProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Materials">
+              <PropertyRef Name="name_materials" />
+            </Principal>
+            <Dependent Role="MaterialsProduct">
+              <PropertyRef Name="name_material" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MaterialsProduct_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="MaterialsProduct" Type="Self.MaterialsProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="name_product" />
+            </Principal>
+            <Dependent Role="MaterialsProduct">
+              <PropertyRef Name="Product" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_product_sale_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="product_sale" Type="Self.product_sale" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="name_product" />
+            </Principal>
+            <Dependent Role="product_sale">
+              <PropertyRef Name="name_product" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="up_shopEntities11" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Materials" EntityType="Self.Materials" />
+          <EntitySet Name="Product" EntityType="Self.Product" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="MaterialsProduct" EntityType="Self.MaterialsProduct" />
+          <EntitySet Name="product_sale" EntityType="Self.product_sale" />
+          <AssociationSet Name="FK_MaterialsProduct_Materials" Association="Self.FK_MaterialsProduct_Materials">
+            <End Role="Materials" EntitySet="Materials" />
+            <End Role="MaterialsProduct" EntitySet="MaterialsProduct" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MaterialsProduct_Product" Association="Self.FK_MaterialsProduct_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="MaterialsProduct" EntitySet="MaterialsProduct" />
+          </AssociationSet>
+          <AssociationSet Name="FK_product_sale_Product" Association="Self.FK_product_sale_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="product_sale" EntitySet="product_sale" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище up_shopModelContainer" CdmEntityContainer="up_shopEntities11">
+          <EntitySetMapping Name="Materials">
+            <EntityTypeMapping TypeName="up_shopModel.Materials">
+              <MappingFragment StoreEntitySet="Materials">
+                <ScalarProperty Name="name_materials" ColumnName="name_materials" />
+                <ScalarProperty Name="tip_materials" ColumnName="tip_materials" />
+                <ScalarProperty Name="kol_vo_upakovke" ColumnName="kol_vo_upakovke" />
+                <ScalarProperty Name="edinicha_izm" ColumnName="edinicha_izm" />
+                <ScalarProperty Name="kol_vo_sklad" ColumnName="kol_vo_sklad" />
+                <ScalarProperty Name="Min_voz_ostatok" ColumnName="Min_voz_ostatok" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Product">
+            <EntityTypeMapping TypeName="up_shopModel.Product">
+              <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="name_product" ColumnName="name_product" />
+                <ScalarProperty Name="articul" ColumnName="articul" />
+                <ScalarProperty Name="min_cost" ColumnName="min_cost" />
+                <ScalarProperty Name="images" ColumnName="images" />
+                <ScalarProperty Name="tip_product" ColumnName="tip_product" />
+                <ScalarProperty Name="kol_for_proizv" ColumnName="kol_for_proizv" />
+                <ScalarProperty Name="number_proizv" ColumnName="number_proizv" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="up_shopModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MaterialsProduct">
+            <EntityTypeMapping TypeName="up_shopModel.MaterialsProduct">
+              <MappingFragment StoreEntitySet="MaterialsProduct">
+                <ScalarProperty Name="Product" ColumnName="Product" />
+                <ScalarProperty Name="name_material" ColumnName="name_material" />
+                <ScalarProperty Name="neobxodimoe_kol_vo_materiala" ColumnName="neobxodimoe_kol_vo_materiala" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="product_sale">
+            <EntityTypeMapping TypeName="up_shopModel.product_sale">
+              <MappingFragment StoreEntitySet="product_sale">
+                <ScalarProperty Name="name_product" ColumnName="name_product" />
+                <ScalarProperty Name="kol_vo_sale" ColumnName="kol_vo_sale" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

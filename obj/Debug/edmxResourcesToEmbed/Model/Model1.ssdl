@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Хранилище up_shopModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Materials">
+    <Key>
+      <PropertyRef Name="name_materials" />
+    </Key>
+    <Property Name="name_materials" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="tip_materials" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="kol_vo_upakovke" Type="float" Nullable="false" />
+    <Property Name="edinicha_izm" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="kol_vo_sklad" Type="float" Nullable="false" />
+    <Property Name="Min_voz_ostatok" Type="float" Nullable="false" />
+    <Property Name="Cost" Type="money" Nullable="false" />
+  </EntityType>
+  <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "up_shop.dbo.MaterialsProduct" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+  <EntityType Name="MaterialsProduct">
+    <Key>
+      <PropertyRef Name="Product" />
+      <PropertyRef Name="name_material" />
+    </Key>
+    <Property Name="Product" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="name_material" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="neobxodimoe_kol_vo_materiala" Type="float" />
+  </EntityType>
+  <EntityType Name="Product">
+    <Key>
+      <PropertyRef Name="name_product" />
+    </Key>
+    <Property Name="name_product" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="articul" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="min_cost" Type="float" Nullable="false" />
+    <Property Name="images" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="tip_product" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="kol_for_proizv" Type="int" Nullable="false" />
+    <Property Name="number_proizv" Type="int" Nullable="false" />
+  </EntityType>
+  <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "up_shop.dbo.product_sale" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+  <EntityType Name="product_sale">
+    <Key>
+      <PropertyRef Name="name_product" />
+    </Key>
+    <Property Name="name_product" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="kol_vo_sale" Type="int" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <Association Name="FK_MaterialsProduct_Materials">
+    <End Role="Materials" Type="Self.Materials" Multiplicity="1" />
+    <End Role="MaterialsProduct" Type="Self.MaterialsProduct" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Materials">
+        <PropertyRef Name="name_materials" />
+      </Principal>
+      <Dependent Role="MaterialsProduct">
+        <PropertyRef Name="name_material" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MaterialsProduct_Product">
+    <End Role="Product" Type="Self.Product" Multiplicity="1" />
+    <End Role="MaterialsProduct" Type="Self.MaterialsProduct" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="name_product" />
+      </Principal>
+      <Dependent Role="MaterialsProduct">
+        <PropertyRef Name="Product" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_product_sale_Product">
+    <End Role="Product" Type="Self.Product" Multiplicity="1" />
+    <End Role="product_sale" Type="Self.product_sale" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="name_product" />
+      </Principal>
+      <Dependent Role="product_sale">
+        <PropertyRef Name="name_product" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Хранилище up_shopModelContainer">
+    <EntitySet Name="Materials" EntityType="Self.Materials" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MaterialsProduct" EntityType="Self.MaterialsProduct" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [MaterialsProduct].[Product] AS [Product], 
+    [MaterialsProduct].[name_material] AS [name_material], 
+    [MaterialsProduct].[neobxodimoe_kol_vo_materiala] AS [neobxodimoe_kol_vo_materiala]
+    FROM [dbo].[MaterialsProduct] AS [MaterialsProduct]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="product_sale" EntityType="Self.product_sale" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [product_sale].[name_product] AS [name_product], 
+    [product_sale].[kol_vo_sale] AS [kol_vo_sale]
+    FROM [dbo].[product_sale] AS [product_sale]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_MaterialsProduct_Materials" Association="Self.FK_MaterialsProduct_Materials">
+      <End Role="Materials" EntitySet="Materials" />
+      <End Role="MaterialsProduct" EntitySet="MaterialsProduct" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MaterialsProduct_Product" Association="Self.FK_MaterialsProduct_Product">
+      <End Role="Product" EntitySet="Product" />
+      <End Role="MaterialsProduct" EntitySet="MaterialsProduct" />
+    </AssociationSet>
+    <AssociationSet Name="FK_product_sale_Product" Association="Self.FK_product_sale_Product">
+      <End Role="Product" EntitySet="Product" />
+      <End Role="product_sale" EntitySet="product_sale" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
